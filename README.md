@@ -2,4 +2,4 @@
 
 All code examples, data files, and assignments for the two session min-course on Introduction to Statistics
 
-October 2021
+October 2022
