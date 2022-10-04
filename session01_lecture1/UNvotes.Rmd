@@ -4,7 +4,7 @@ author: "Your name goes here"
 date: "`r Sys.Date()`"
 output:
   html_document:
-    theme: flatly
+    theme: cerulean
     highlight: zenburn
     toc: yes
     toc_float: yes
@@ -15,8 +15,8 @@ editor_options:
     wrap: 72
 ---
 
-Let's take a look at the voting *history* of countries in the **United
-Nations** General Assembly. We will be using data from the **unvotes**
+Let's take a look at the voting history of countries in the ***United
+Nations General Assembly***. We will be using data from the **unvotes**
 package. Additionally, we will make use of the **tidyverse** and
 **lubridate** packages for the analysis, and the **DT** package for
 interactive display of tabular output.
@@ -70,7 +70,7 @@ resolution in each year. We'll visualize the results, so let's pick a
 few countries of interest first,
 
 ```{r country-list}
-country_list <- c("United States", "China", 
+country_list <- c("Greece", "China", 
                   "United Kingdom", "India")
 ```
 
@@ -106,7 +106,7 @@ Italy.
 
 ```{r plot-yearly-yes-issue, fig.width=10, warning=FALSE, message=FALSE}
 un_votes %>%
-  filter(country %in% c("United States", "Greece",  "Italy")) %>%
+  filter(country %in% c("United States", "Italy")) %>%
   inner_join(un_roll_calls, by = "rcid") %>%
   inner_join(un_roll_call_issues, by = "rcid") %>%
   group_by(country, year = year(date), issue) %>%

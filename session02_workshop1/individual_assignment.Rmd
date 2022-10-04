@@ -46,57 +46,82 @@ library(rvest) # to scrape wikipedia page
 
 
 
-# Where Do People Drink The Most Beer, Wine And Spirits?
+# Rents in San Francsisco Bay Area 2000-2018
 
-Back in 2014, [fivethiryeight.com](https://fivethirtyeight.com/features/dear-mona-followup-where-do-people-drink-the-most-beer-wine-and-spirits/) published an article on alchohol consumption in different countries. The data `drinks` is available as part of the `fivethirtyeight` package. Make sure you have installed the `fivethirtyeight` package before proceeding.
+[Kate Pennington](https://www.katepennington.org/data) created a panel of historic Craigslist rents by scraping posts archived by the Wayback Machine. You can read more about her work here
 
+[What impact does new housing have on rents, displacement, and gentrification in the surrounding neighborhood? Read our interview with economist Kate Pennington about her article, "Does Building New Housing Cause Displacement?:The Supply and Demand Effects of Construction in San Francisco."](https://matrix.berkeley.edu/research-article/kate-pennington-on-gentrification-and-displacement-in-san-francisco/)
 
-```{r, load_alcohol_data}
-library(fivethirtyeight)
-data(drinks)
+In our case, we have a clean(ish) dataset with about 200K rows that correspond to Craigslist listings for renting properties in the greater SF area. The data dictionary is as follows
 
+| variable    | class     | description           |
+|-------------|-----------|-----------------------|
+| post_id     | character | Unique ID             |
+| date        | double    | date                  |
+| year        | double    | year                  |
+| nhood       | character | neighborhood          |
+| city        | character | city                  |
+| county      | character | county                |
+| price       | double    | price in USD          |
+| beds        | double    | n of beds             |
+| baths       | double    | n of baths            |
+| sqft        | double    | square feet of rental |
+| room_in_apt | double    | room in apartment     |
+| address     | character | address               |
+| lat         | double    | latitude              |
+| lon         | double    | longitude             |
+| title       | character | title of listing      |
+| descr       | character | description           |
+| details     | character | additional details    |
 
-# or download directly
-# alcohol_direct <- read_csv("https://raw.githubusercontent.com/fivethirtyeight/data/master/alcohol-consumption/drinks.csv")
+The dataset was used in a recent [tidyTuesday](https://github.com/rfordatascience/tidytuesday) project.
+
+```{r}
+# download directly off tidytuesdaygithub repo
+
+rent <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-07-05/rent.csv')
 
 ```
 
+What are the variable types? Do they all correspond to what they really are? Which variables have most missing values?
 
-What are the variable types? Any missing values we should worry about? 
+```{r skim_data}
+# YOUR CODE GOES HERE
+skimr::skim(rent)
 
-```{r glimpse_skim_data}
+```
+
+Make a plot that shows the top 20 cities in terms of % of classifieds between 2000-2018. You need to calculate the number of listings by city, and then convert that number to a %.
+
+The final graph should look like this![](images/top_cities.png)
+
+```{r top_cities}
 # YOUR CODE GOES HERE
 
 
 ```
 
+Make a plot that shows the evolution of median prices in San Francisco for 0, 1, 2, and 3 bedrooms listings. The final graph should look like this
 
-Make a plot that shows the top 25 beer consuming countries
+![](images/sf_rentals.png)
 
-```{r beer_plot}
-# YOUR CODE GOES HERE
-
-
-```
-
-Make a plot that shows the top 25 wine consuming countries
-
-```{r wine_plot}
+```{r sf_median_prices}
 
 # YOUR CODE GOES HERE
 
 
 ```
 
-Finally, make a plot that shows the top 25 spirit consuming countries
+Finally, make a plot that shows median rental prices for the top 12 cities in the Bay area. Your final graph should look like this
+
+![](images/one_bed_bay_area.png)
+
 ```{r spirit_plot}
 # YOUR CODE GOES HERE
 
 ```
 
 What can you infer from these plots? Don't just explain what's in the graph, but speculate or tell a short story (1-2 paragraphs max).
-
-> TYPE YOUR ANSWER AFTER (AND OUTSIDE!) THIS BLOCKQUOTE.
 
 # Analysis of movies- IMDB dataset
 
@@ -216,7 +241,7 @@ tickers <- table1 %>%
 
 ```
 
-Now let us downlaod prices for all 30 DJIA consituents and the SPY ETF that tracks SP500 since January 1, 2020
+Now let us download prices for all 30 DJIA consituents and the SPY ETF that tracks SP500 since January 1, 2020
 
 
 ```{r get_price_data, message=FALSE, warning=FALSE, cache=TRUE}
@@ -287,347 +312,6 @@ Finally, make a plot that shows the expected monthly return (mean) of a stock on
 What can you infer from this plot? Are there any stocks which, while being riskier, do not have a higher expected return?
 
 > TYPE YOUR ANSWER AFTER (AND OUTSIDE!) THIS BLOCKQUOTE.
-
-
-# Is inflation transitory?
-
-
-> You may find useful the material on [downloading economic data from the FRED](https://esmt-mim-intro-stats.netlify.app/reference/finance_data/#data-from-the-federal-reserve-economic-data-with-tidyquant). 
-
-A recent study by the Bank for International Settlements (BIS) claimed that the [Current Inflation Spike Is Just Transitory](https://www.bloomberg.com/news/articles/2021-09-20/current-inflation-spike-is-just-transitory-new-bis-study-argues). As the article says, 
-
-
-> The surge in inflation seen across major economies is probably short lived because it’s confined to just a few sectors of the economy, according to the Bank for International Settlements. 
-
-> New research by the BIS’s Claudio Borio, Piti Disyatat, Egon Zakrajsek and Dora Xia adds to one of the hottest debates in economics -- how long the current surge in consumer prices will last. Both Federal Reserve Chair Jerome Powell and his euro-area counterpart Christine Lagarde have said the pickup is probably transitory, despite a snarled global supply chain and a spike in energy prices. 
-
-You have to download data for CPI and the 10 year bill and produce the following graph
-
-
-```{r cpi_10year, echo=FALSE, out.width="90%"}
-knitr::include_graphics(here::here("images", "cpi_10year.png"), error = FALSE)
-```
-
-
-The relevant indicators from FRED are:
-
-- [Consumer Price Index for All Urban Consumers: All Items in U.S. City Average](https://fred.stlouisfed.org/series/CPIAUCSL)
-- [10-Year Treasury Constant Maturity Rate](https://fred.stlouisfed.org/series/GS10)
-
-
-```{r, get_cpi_10Year_yield}
-
-cpi  <-   tq_get("CPIAUCSL", get = "economic.data",
-                       from = "1980-01-01") %>% 
-  rename(cpi = symbol,  # FRED data is given as 'symbol' and 'price'
-         rate = price) %>% # we rename them to what they really are, e.g., cpi and rate
-  
-  # calculate yearly change in CPI by dividing current month by same month a year (or 12 months) earlier, minus 1
-  mutate(cpi_yoy_change = rate/lag(rate, 12) - 1)
-
-ten_year_monthly  <-   tq_get("GS10", get = "economic.data",
-                       from = "1980-01-01") %>% 
-  rename(ten_year = symbol,
-         yield = price) %>% 
-  mutate(yield = yield / 100) # original data is not given as, e.g., 0.05, but rather 5, for five percent
-
-# we have the two dataframes-- we now need to join them, and we will use left_join()
-# base R has a function merge() that does the same, but it's slow, so please don't use it
-
-mydata <- 
-  cpi %>% 
-  left_join(ten_year_monthly, by="date") %>% 
-  mutate(
-    year = year(date), # using lubridate::year() to generate a new column with just the year
-    month = month(date, label = TRUE),
-    decade=case_when(
-      year %in% 1980:1989 ~ "1980s",
-      year %in% 1990:1999 ~ "1990s",
-      year %in% 2000:2009 ~ "2000s",
-      year %in% 2010:2019 ~ "2010s",
-      TRUE ~ "2020s"
-      )
-  )
-
-```
-
-
-
-# Climate change and temperature anomalies 
-
-
-If we wanted to study climate change, we can find data on the *Combined Land-Surface Air and Sea-Surface Water Temperature Anomalies* in the Northern Hemisphere at [NASA's Goddard Institute for Space Studies](https://data.giss.nasa.gov/gistemp). The [tabular data of temperature anomalies can be found here](https://data.giss.nasa.gov/gistemp/tabledata_v4/NH.Ts+dSST.txt)
-
-To define temperature anomalies you need to have a reference, or base, period which NASA clearly states that it is the period between 1951-1980.
-
-Run the code below to load the file:
-
-```{r weather_data, cache=TRUE}
-
-weather <- 
-  read_csv("https://data.giss.nasa.gov/gistemp/tabledata_v4/NH.Ts+dSST.csv", 
-           skip = 1, 
-           na = "***")
-
-```
-
-Notice that, when using this function, we added two options: `skip` and `na`.
-
-1. The `skip=1` option is there as the real data table only starts in Row 2, so we need to skip one row. 
-1. `na = "***"` option informs R how missing observations in the spreadsheet are coded. When looking at the spreadsheet, you can see that missing data is coded as "***". It is best to specify this here, as otherwise some of the data is not recognized as numeric data.
-
-Once the data is loaded, notice that there is a object titled `weather` in the `Environment` panel. If you cannot see the panel (usually on the top-right), go to `Tools` > `Global Options` > `Pane Layout` and tick the checkbox next to `Environment`. Click on the `weather` object, and the dataframe will pop up on a seperate tab. Inspect the dataframe.
-
-For each month and year, the dataframe shows the deviation of temperature from the normal (expected). Further the dataframe is in wide format. 
-
-You have two objectives in this section:
-
-1. Select the year and the twelve month variables from the `weather` dataset. We do not need the others (J-D, D-N, DJF, etc.) for this assignment. Hint: use `select()` function.
-
-1. Convert the dataframe from wide to 'long' format. Hint: use `pivot_longer()` function. Name the new dataframe as `tidyweather`, name the variable containing the name of the month as `month`, and the temperature deviation values as `delta`.
-
-
-```{r tidyweather}
-
-tidyweather <- weather %>% 
-  select(1:13) %>% # just select the first 13 columns, `year` and the 12 months
-  pivot_longer(
-    cols = 2:13, # we want to pivot longer the 12 months, that appear in columns 2-13
-    names_to = "Month",
-    values_to = "delta"
-  )
-
-```
-
-Inspect your dataframe. It should have three variables now, one each for 
-
-1. year, 
-1. month, and 
-1. delta, or temperature deviation.
-
-## Plotting Information
-
-Let us plot the data using a time-series scatter plot, and add a trendline. To do that, we first need to create a new variable called `date` in order to ensure that the `delta` values are plot chronologically. 
-
-
-```{r scatter_plot}
-
-tidyweather <- tidyweather %>%
-  mutate(date = ymd(paste(as.character(Year), Month, "1")),
-         month = month(date, label=TRUE),
-         year = year(date))
-
-ggplot(tidyweather, aes(x=date, y = delta))+
-  geom_point()+
-  geom_smooth(color="red") +
-  theme_bw() +
-  labs (
-    title = "Weather Anomalies"
-  )
-
-```
-
-Is the effect of increasing temperature more pronounced in some months? Use `facet_wrap()` to produce a separate scatter plot for each month, again with a smoothing line. Your chart should human-readable labels; that is, each month should be labeled "Jan", "Feb", "Mar" (full or abbreviated month names are fine), not `1`, `2`, `3`. 
-
-```{r facet_wrap, echo=FALSE}
-
-#Your code goes here...
-
-```
-
-
-It is sometimes useful to group data into different time periods to study historical data. For example, we often refer to decades such as 1970s, 1980s, 1990s etc. to refer to a period of time. NASA calcuialtes a temperature anomaly, as difference form the base periof of 1951-1980. The code below creates a new data frame called `comparison` that groups data in five time periods: 1881-1920, 1921-1950, 1951-1980, 1981-2010 and 2011-present. 
-
-We remove data before 1800 and before using `filter`. Then, we use the `mutate` function to create a new variable `interval` which contains information on which period each observation belongs to. We can assign the different periods using `case_when()`.
-
-
-```{r intervals}
-
-comparison <- tidyweather %>% 
-  filter(Year>= 1881) %>%     #remove years prior to 1881
-  #create new variable 'interval', and assign values based on criteria below:
-  mutate(interval = case_when(
-    Year %in% c(1881:1920) ~ "1881-1920",
-    Year %in% c(1921:1950) ~ "1921-1950",
-    Year %in% c(1951:1980) ~ "1951-1980",
-    Year %in% c(1981:2010) ~ "1981-2010",
-    TRUE ~ "2011-present"
-  ))
-
-```
-
-Inspect the `comparison` dataframe by clicking on it in the `Environment` pane.
-
-Now that we have the `interval` variable, we can create a density plot to study the distribution of monthly deviations (`delta`), grouped by the different time periods we are interested in. Set `fill` to `interval` to group and colour the data by different time periods.
-
-```{r density_plot}
-
-ggplot(comparison, aes(x=delta, fill=interval))+
-  geom_density(alpha=0.2) +   #density plot with tranparency set to 20%
-  theme_bw() +                #theme
-  labs (
-    title = "Density Plot for Monthly Temperature Anomalies",
-    y     = "Density"         #changing y-axis label to sentence case
-  )
-
-```
-
-So far, we have been working with monthly anomalies. However, we might be interested in average annual anomalies. We can do this by using `group_by()` and `summarise()`, followed by a scatter plot to display the result. 
-
-```{r averaging}
-
-#creating yearly averages
-average_annual_anomaly <- tidyweather %>% 
-  group_by(Year) %>%   #grouping data by Year
-  
-  # creating summaries for mean delta 
-  # use `na.rm=TRUE` to eliminate NA (not available) values 
-  summarise(......) 
-
-#plotting the data:
-ggplot(average_annual_anomaly, aes(x=year, y= annual_average_delta))+
-  geom_point()+
-  
-  #Fit the best fit line, using LOESS method
-  geom_smooth() +
-  
-  #change to theme_bw() to have white background + black frame around plot
-  theme_bw() +
-  labs (
-    title = "Average Yearly Anomaly",
-    y     = "Average Annual Delta"
-  )                         
-
-
-```
-
-
-## Confidence Interval for `delta`
-
-[NASA points out on their website](https://earthobservatory.nasa.gov/world-of-change/decadaltemp.php) that 
-
-> A one-degree global change is significant because it takes a vast amount of heat to warm all the oceans, atmosphere, and land by that much. In the past, a one- to two-degree drop was all it took to plunge the Earth into the Little Ice Age.
-
-Your task is to construct a summary statistics for the temperature anomaly `delta`. Recall that the dataframe `comparison` has already grouped temperature anomalies according to time intervals; we are only interested in what is happening  between 2011-present.
-
-```{r, delta_stats}
-
-mosaic::favstats(delta ~ interval, data = comparison)
-```
-
-> What is the data showing us? Please type your answer after (and outside!) this blockquote. You have to explain what you have done, and the interpretation of the result. One paragraph max, please!
-
-# Global warming and political views
-
-[A 2010 Pew Research poll](https://www.pewresearch.org/2010/10/27/wide-partisan-divide-over-global-warming/) asked 1,306 Americans, "From what you've read and heard, is there solid evidence that the average temperature on earth has been getting warmer over the past few decades, or not?"
-
-
-In this exercise we analyze whether there are any differences between the proportion of people who believe the earth is getting warmer and their political ideology. As usual, from the **survey sample data**, we will use the proportions to estimate values of *population parameters*. The file has 2253 observations on the following 2 variables:
-
-- `party_or_ideology`: a factor (categorical) variable with levels Conservative Republican, Liberal Democrat, Mod/Cons Democrat, Mod/Lib Republican
-- `response` : whether the respondent believes the earth is warming or not, or Don't know/ refuse to answer
-
-```{r, read_global_warming_pew_data}
-global_warming_pew <- read_csv(here::here("data", "global_warming_pew.csv"))
-```
-
-You will also notice that many responses should not be taken into consideration, like "No Answer", "Don't Know", "Not applicable", "Refused to Answer".
-
-
-```{r}
-global_warming_pew %>% 
-  count(party_or_ideology, response)
-
-
-global_warming_pew %>% 
-  filter(response != "Don't know / refuse to answer") %>% # remove those who didnt answer
-  count(party_or_ideology, response) %>% 
-  group_by(party_or_ideology) %>% 
-  mutate(prop = 100* n/sum(n))
-
-```
-
-We can construct four 95% confidence intervals to estimate population parameters, for the % who believe that **Earth is warming**, according to their party or ideology. You will be doing in your statistics class, but does it appear that whether a respondent believes the earth is warming depends on her party ideology?  You may want to read on [The challenging politics of climate change](https://www.brookings.edu/research/the-challenging-politics-of-climate-change/)
-
-
-
-# IBM HR Analytics
-
-
-For this task, you will analyse a data set on Human Resoruce Analytics. The [IBM HR Analytics Employee Attrition & Performance data set](https://www.kaggle.com/pavansubhasht/ibm-hr-analytics-attrition-dataset) is a fictional data set created by IBM data scientists.  Among other things, the data set includes employees' income, their distance from work, their position in the company, their level of education, etc. A full description can be found on the website.
-
-
-First let us load the data
-
-```{r}
-
-hr_dataset <- read_csv(here::here("data", "datasets_1067_1925_WA_Fn-UseC_-HR-Employee-Attrition.csv")) %>%   janitor::clean_names()
-
-glimpse(hr_dataset)
-
-```
-
-I am going to clean the data set, as variable names are in capital letters, some variables are not really necessary, and some variables, e.g., `education` are given as a number rather than a more useful description
-
-
-```{r}
-
-hr_cleaned <- hr_dataset %>% 
-  clean_names() %>% 
-  mutate(
-    education = case_when(
-      education == 1 ~ "Below College",
-      education == 2 ~ "College",
-      education == 3 ~ "Bachelor",
-      education == 4 ~ "Master",
-      education == 5 ~ "Doctor"
-    ),
-    environment_satisfaction = case_when(
-      environment_satisfaction == 1 ~ "Low",
-      environment_satisfaction == 2 ~ "Medium",
-      environment_satisfaction == 3 ~ "High",
-      environment_satisfaction == 4 ~ "Very High"
-    ),
-    job_satisfaction = case_when(
-      job_satisfaction == 1 ~ "Low",
-      job_satisfaction == 2 ~ "Medium",
-      job_satisfaction == 3 ~ "High",
-      job_satisfaction == 4 ~ "Very High"
-    ),
-    performance_rating = case_when(
-      performance_rating == 1 ~ "Low",
-      performance_rating == 2 ~ "Good",
-      performance_rating == 3 ~ "Excellent",
-      performance_rating == 4 ~ "Outstanding"
-    ),
-    work_life_balance = case_when(
-      work_life_balance == 1 ~ "Bad",
-      work_life_balance == 2 ~ "Good",
-      work_life_balance == 3 ~ "Better",
-      work_life_balance == 4 ~ "Best"
-    )
-  ) %>% 
-  select(age, attrition, daily_rate, department,
-         distance_from_home, education,
-         gender, job_role,environment_satisfaction,
-         job_satisfaction, marital_status,
-         monthly_income, num_companies_worked, percent_salary_hike,
-         performance_rating, total_working_years,
-         work_life_balance, years_at_company,
-         years_since_last_promotion)
-
-```
-
-Produce a one-page summary describing this dataset. Here is a non-exhaustive list of questions:
-
-1. How often do people leave the company (`attrition`)
-1. How are `age`, `years_at_company`, `monthly_income` and `years_since_last_promotion` distributed? can you roughly guess which of these variables is closer to Normal just by looking at summary statistics? 
-1. How are `job_satisfaction` and `work_life_balance` distributed? Don't just report counts, but express categories as % of total
-1. Is there any relationship between monthly income and education? Monthly income and gender?
-1. Plot a boxplot of income vs job role. Make sure the highest-paid job roles appear first
-1. Calculate and plot a bar chart of the mean (or median?) income by education level.
-1. Plot the distribution of income by education level. Use a facet_wrap and a theme from `ggthemes`
-1. Plot income vs age, faceted by `job_role`
 
 # Deliverables
 
