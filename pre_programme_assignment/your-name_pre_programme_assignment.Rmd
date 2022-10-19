@@ -143,7 +143,7 @@ We will have a look at the results of the 2016 Brexit vote in the UK. First we r
 ```{r load_brexit_data, warning=FALSE, message=FALSE}
 
 # read data directly off github repo
-brexit_results <- read_csv("https://raw.githubusercontent.com/kostis-christodoulou/esmt-intro-stats/master/data/brexit_results.csv")
+brexit_results <- read_csv("https://raw.githubusercontent.com/kostis-christodoulou/esmt_intro_stats/master/data/brexit_results.csv")
 
 
 glimpse(brexit_results)
