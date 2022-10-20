@@ -208,7 +208,7 @@ What can you say about the relationship shown above? Again, don't just say what'
 
 # Submit the assignment
 
-Knit the completed R Markdown file as an HTML document (use the "Knit" button at the top of the script editor window) and upload it to Canvas.
+Knit the completed R Markdown file as an HTML document (use the "Knit" button at the top of the script editor window) and upload it to moodle.
 
 ## Details
 
