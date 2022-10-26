@@ -115,13 +115,29 @@ Make a plot that shows the evolution of median prices in San Francisco for 0, 1,
 Finally, make a plot that shows median rental prices for the top 12 cities in the Bay area. Your final graph should look like this
 
 ![](images/one_bed_bay_area.png)
+To calculate yearly change, we will 
 
-```{r spirit_plot}
-# YOUR CODE GOES HERE
+1. use R's `lag()` function to compare this year's `median_rental` with the one from last year to calculate the percentage change `pct_change`
+1. Given that for the first year in the dataset 2000, we cannot have a `pct_change`, we use an `ifelse()` function to set that value = 1, or 100%
+1. To find the cumulative change over time, we use R's `cumprod()`, which gives us the cumulative product over time.
 
+
+```
+  mutate(pct_change = (median_rental/lag(median_rental,1))) %>% 
+  mutate(pct_change = ifelse(is.na(pct_change), 1, pct_change)) %>% 
+  mutate(cumulative_change = cumprod(pct_change)) 
 ```
 
 What can you infer from these plots? Don't just explain what's in the graph, but speculate or tell a short story (1-2 paragraphs max).
+
+Finally... Replicating a chart
+
+The purpose of this exercise is to reproduce a plot using your `dplyr` and `ggplot2` skills. You have to create a graph that calculates the cumulative % change in median rental prices for 0-, 1-, and 2-bed flats between 2000 and 2018 for the top twelve cities in Bay Area, by number of ads that appeared in Craigslist. Your final graph should look like this
+
+![](images/challenge1.png)
+
+
+
 
 # Returns of financial stocks
 
@@ -136,7 +152,7 @@ We must first identify which stocks we want to download data for, and for this w
 nyse <- read_csv(here::here("data","nyse.csv"))
 ```
 
-Based on this dataset, create a table and a bar plot that shows the number of companies per sector, in descending order
+Based on this dataset, create a table and a bar plot using `geom_col()` that shows the number of companies per sector, in descending order
 
 ```{r companies_per_sector}
 

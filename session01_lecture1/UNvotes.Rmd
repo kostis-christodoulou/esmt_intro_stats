@@ -4,7 +4,7 @@ author: "Your name goes here"
 date: "`r Sys.Date()`"
 output:
   html_document:
-    theme: cerulean
+    theme: darkly
     highlight: zenburn
     toc: yes
     toc_float: yes
@@ -71,7 +71,7 @@ few countries of interest first,
 
 ```{r country-list}
 country_list <- c("Greece", "China", 
-                  "United Kingdom", "India")
+                  "Germany", "India")
 ```
 
 and focus our analysis on them.
@@ -106,7 +106,7 @@ Italy.
 
 ```{r plot-yearly-yes-issue, fig.width=10, warning=FALSE, message=FALSE}
 un_votes %>%
-  filter(country %in% c("United States", "Italy")) %>%
+  filter(country %in% c("Greece", "Italy")) %>%
   inner_join(un_roll_calls, by = "rcid") %>%
   inner_join(un_roll_call_issues, by = "rcid") %>%
   group_by(country, year = year(date), issue) %>%
